@@ -12,34 +12,36 @@ y10 = 4/3;
 y20 = 2/3;
 y0 = [y10; y20];
 hf = @(j) 2.^(-j);
-h = hf(2);
-
-T = (a:h:b)';
-n = size(T,1);
-Y=zeros(n,N);
-Y(1,:)=y0;
-
-for j=1:n-1
-    back = @(w) w - h*y(T(j+1),w)' - Y(j,:);
-    B = fsolve(back,Y(j,:));
-    Y(j+1,:) = B';
+for jj=1:6
+    h = hf(jj);
+    
+    T = (a:h:b)';
+    n = size(T,1);
+    Y=zeros(n,N);
+    Y(1,:)=y0;
+    
+    for j=1:n-1
+        back = @(w) w - h*y(T(j+1),w)' - Y(j,:);
+        B = fsolve(back,Y(j,:));
+        Y(j+1,:) = B';
+    end
+    plot(T', Y(:,2))
+    hold on
+    
 end
 
 Y1exact = y1exact(T);
 Y2exact = y2exact(T)
-
 Yexact = [Y1exact Y2exact];
 
 
-plot(T', Y(:,1))
-hold on
-plot(T', Y1exact)
-legend('Solución aproximada','Solución exacta')
-title("Aproximación de y1(t) con Euler implícito" )
-
-
-plot(T', Y(:,2))
-hold on
 plot(T', Y2exact)
-legend('Solución aproximada','Solución exacta')
+legend('Solución aproximada con h=0.5', ...
+    'Solución aproximada con h=0.25', ...
+    'Solución aproximada con h=0.125', ...
+    'Solución aproximada con h=0.0625',...
+    'Solución aproximada con h=0.0312',...
+    'Solución aproximada con h=0.0156',...
+    'Solución exacta')
 title("Aproximación de y2(t) con Euler implícito" )
+
