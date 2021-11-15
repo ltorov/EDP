@@ -36,8 +36,21 @@ for jj=4:8
     end
     plot(T', Y(:,2))
     hold on
+    Y1exact = y1exact(T);
+    Y2exact = y2exact(T);
 
-    
+    Error1 = abs(Y1exact-Y(:,1));
+    Error2 = abs(Y2exact-Y(:,2));
+ 
+
+    results = [T Y(:,1) Y(:,2) Y1exact Y2exact Error1 Error2];
+    variablenames = {'t', 'y1 aproximada','y2 aproximada','y1 exacta','y2 exacta', 'Error absoluto y1','Error absoluto y2'};
+    results = array2table(results, 'VariableNames',variablenames);
+    disp(results);
+
+    tablalatex.data = results;
+    tablalatex.tableColLabels = variablenames;
+    latex = latexTable(tablalatex);  
 end
 Y1exact = y1exact(T);
 Y2exact = y2exact(T);

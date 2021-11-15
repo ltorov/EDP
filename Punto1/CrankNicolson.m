@@ -13,7 +13,7 @@ y20 = 2/3;
 y0 = [y10; y20];
 hf = @(j) 2.^(-j);
 
-for jj=1:6
+for jj=6:6
     h = hf(jj);
     T = (a:h:b)';
     n = size(T,1);
@@ -27,10 +27,25 @@ for jj=1:6
     end
     plot(T', Y(:,2))
     hold on
+    Y1exact = y1exact(T);
+    Y2exact = y2exact(T);
+
+    Error1 = abs(Y1exact-Y(:,1));
+    Error2 = abs(Y2exact-Y(:,2));
+ 
+
+    results = [T Y(:,1) Y(:,2) Y1exact Y2exact Error1 Error2];
+    variablenames = {'t', 'y1 aproximada','y2 aproximada','y1 exacta','y2 exacta', 'Error absoluto y1','Error absoluto y2'};
+    results = array2table(results, 'VariableNames',variablenames);
+    disp(results);
+
+    tablalatex.data = results;
+    tablalatex.tableColLabels = variablenames;
+    latex = latexTable(tablalatex);
 end
 
 Y1exact = y1exact(T);
-Y2exact = y2exact(T)
+Y2exact = y2exact(T);
 
 plot(T', Y2exact)
 legend('Solución aproximada con h=0.5', ...
