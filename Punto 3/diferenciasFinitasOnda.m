@@ -4,11 +4,17 @@ ax = 0;
 bx = 1;
 at = 0;
 bt = 1;
-M = 20;
-N = 20;
-f=@(x,t) 16*pi^2*sin(pi*x)*cos(4*pi*t); % define input function data
+jj = 6;
+c = 4;
+hf = @(j) 2^(-j);
+h = hf(jj);
+k=(bt-at)/c;
+M = (bx-ax)/h;
+N = M;
+uexact = @(x,t) sin(pi*x).*cos(4*pi*t);
+f = @(x,t) 16*pi^2*sin(pi*x).*cos(4*pi*t);
 
-g1=@(x) sin(pi*x); % define boundary values
+g1=@(x) sin(pi*x);
 
 g2= 0;
 
@@ -19,8 +25,7 @@ g4= 0;
 m=M+1;n=N+1; mn=m*n;
 
 
-h= (bx-ax)/M;
-k=(bt-at)/4;
+
 
 X=(ax:h:bx);
 
@@ -66,9 +71,35 @@ b(m+(j-1)*m)=g4;
 
 end
 
-v=A\b;% solve for solution in v labeling
+U=A\b;
 
-w=reshape(v(1:mn),m,n); %translate from v to w
 
-mesh(X,T,w)
 
+
+
+Tnew = repmat(T',size(T,2),1);
+
+Xnew = zeros(size(X,2)*size(X,2),1);
+
+cont = 1;
+
+for i=1:size(X,2)
+    for j = 1:size(X,2)
+        Xnew(cont)=X(i);
+        cont = cont+1;
+    end
+end
+
+Uexact = uexact(Xnew,Tnew);
+Error = U-Uexact;
+results = [Xnew Tnew U Uexact Error];
+variablenames = {'x','t', 'U aproximada', 'U exacta', 'Error absoluto'};
+results = array2table(results, 'VariableNames',variablenames);
+disp(results)
+
+tablalatex.data = results;
+tablalatex.tableColLabels = variablenames;
+latex = latexTable(tablalatex);
+
+w=reshape(U(1:mn),m,n);
+meshu = mesh(X,T,w)
