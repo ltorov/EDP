@@ -4,7 +4,7 @@ ax = 0;
 bx = 1;
 at = 0;
 bt = 1;
-jj = 6;
+jj = 2;
 c = 4;
 hf = @(j) 2^(-j);
 h = hf(jj);
@@ -102,4 +102,7 @@ tablalatex.tableColLabels = variablenames;
 latex = latexTable(tablalatex);
 
 w=reshape(U(1:mn),m,n);
-meshu = mesh(X,T,w)
+
+figure;
+mesh(X,T,w)
+
